@@ -1,0 +1,61 @@
+/* nav {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+} */
+
+body {
+  margin: 0;
+}
+
+h2 {
+  text-align: center;
+  flex: 1;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* .top-bar-item {
+  padding-left: 2rem;
+  padding-right: 2rem;
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 2rem;
+  background-color: cadetblue;
+  color: white;
+  font-weight: bold;
+  border-width: 1px;
+  border-style: solid;
+} */
+
+hr {
+  margin-top: 0;
+}
+
+#root {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 100vh;
+}
+.main-container {
+  flex: 1;
+}
+
+
+@media (max-width: 768px) {
+  .nav-menu {
+    flex-direction: column; /* Располагаем кнопки вертикально */
+    align-items: center; /* Центрируем кнопки по горизонтали */
+  }
+
+  .top-bar-item {
+    font-size: 1rem;
+    margin: 5px 0; /* Отступы между кнопками по высоте */
+    display: block; /* Каждая кнопка занимает свою строку */
+    text-align: center; /* Текст выровнен по центру */
+  }
+}

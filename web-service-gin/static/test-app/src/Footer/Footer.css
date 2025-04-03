@@ -1,0 +1,70 @@
+footer {
+    background-color: #263d69;
+    box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.footer-upper-level {
+    margin-bottom: 1.5rem;
+    padding-top: 1rem;
+}
+
+.footer-lower-level {
+    padding-bottom: 1rem;
+}
+
+.footer-socials-icon {
+    width: 40px;
+}
+
+.footer-upper-level {
+    display: flex;
+    justify-content: space-around;
+}
+
+.footer-menu-item {
+    display: block;
+}
+
+.footer-text {
+    font-family: Arial, sans-serif;
+    color: white;
+}
+
+.footer-menu-title, .footer-catalog-title, .footer-menu-item, .footer-catalog-item  {
+    font-size: 1.25rem;
+}
+
+.footer-menu-title, .footer-catalog-title {
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.footer-menu-item {
+    text-decoration: underline;
+    margin-bottom: 0.05rem;
+}
+
+.footer-catalog-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.footer-catalog-item {
+    margin-left: 0.25rem;
+    margin-right: 0.25rem;
+    margin-top: 0.15rem;
+    margin-bottom: 0.15rem;
+    text-decoration: underline;
+}
+
+.footer-lower-level {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.footer-phone-number {
+    text-decoration: underline;
+    font-weight: bold;
+}

@@ -1,0 +1,71 @@
+.personal-title,
+.order-title, .order-title,
+.order-price,
+.order-button {
+    font-family: Arial, sans-serif;
+}
+
+.order-cover {
+    max-height: 20vh;
+}
+
+.personal-order {
+    display: flex;
+    justify-content: space-between;
+    margin-left: 10vw;
+    margin-right: 10vw;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-style: solid;
+    border-color: black;
+    border-width: 1px;
+    border-radius: 15px;
+}
+
+.order-left-section, .order-right-section {
+    display: flex;
+    align-items: center;
+}
+
+.order-info-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    margin-left: 1rem;
+}
+
+.order-title {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.order-price {
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin-right: 2rem;
+}
+
+.order-button {
+    font-size: 1.25rem;
+    font-weight: bold;
+    border-radius: 10px;
+    border-color: red;
+    background-color: white;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.order-button:hover {
+    cursor: pointer;
+    background-color: red;
+    color: white;
+}
