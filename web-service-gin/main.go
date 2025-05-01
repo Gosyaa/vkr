@@ -60,6 +60,9 @@ func main() {
 	router.GET("/categories", api.Categories)
 	router.GET("/items", api.Items)
 	router.GET("/item", api.Item)
+	router.POST("/checkUser", api.CheckUser)
+	router.POST("/createUser", api.CreateUser)
+	router.GET("/userByToken", api.UserByToken)
 
 	router.Run("localhost:8080")
 }
