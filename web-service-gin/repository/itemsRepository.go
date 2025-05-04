@@ -40,3 +40,28 @@ func GetItemById(itemId int64) (ItemRaw, error) {
 
 	return items[0], nil
 }
+
+func InsertItem(item ItemRaw) error {
+	initDB()
+
+	_, err := connection.Exec(`INSERT INTO items 
+		(id, "categoryId", title, description, image, price, available)
+		VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+		item.Id, item.CategoryId, item.Title, item.Description, item.Image, item.Price, item.Available)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func UpdateItemQuantity(itemID int64, available int64) error {
+	initDB()
+
+	_, err := connection.Exec(`UPDATE items SET available = $1 WHERE id = $2`, available, itemID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

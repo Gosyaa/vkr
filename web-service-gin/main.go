@@ -63,6 +63,8 @@ func main() {
 	router.POST("/checkUser", api.CheckUser)
 	router.POST("/createUser", api.CreateUser)
 	router.GET("/userByToken", api.UserByToken)
+	router.GET("/userOrders", api.UserOrders)
+	router.POST("/createOrder", api.CreateOrder)
 
 	router.Run("localhost:8080")
 }
