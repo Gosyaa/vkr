@@ -1,6 +1,7 @@
 package shop
 
 import (
+	"errors"
 	"example/web-service-gin/common"
 	"example/web-service-gin/repository"
 )
@@ -119,4 +120,36 @@ func GetItem(itemID int64) (Item, error) {
 	}
 
 	return constructItem(item, properties, extraImages), nil
+}
+
+func CheckAvailability(itemID int64, count int64) (int64, error) {
+	item, err := GetItem(itemID)
+	if err != nil {
+		return -1, err
+	}
+
+	if item.Available < count {
+		return -1, nil
+	}
+
+	return item.Price * count, nil
+}
+
+func HandleOrder(itemID int64, count int64) error {
+	item, err := repository.GetItemById(itemID)
+	if err != nil {
+		return err
+	}
+
+	item.Available -= count
+	if item.Available < 0 {
+		return errors.New("item not available")
+	}
+
+	err = repository.UpdateItemQuantity(itemID, item.Available)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
