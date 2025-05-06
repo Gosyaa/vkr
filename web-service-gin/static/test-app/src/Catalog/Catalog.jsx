@@ -6,10 +6,10 @@ import sauleda from './sauleda.jpg';
 import achilles from './achilles.png';
 import './Catalog.css';
 import categories from '../data/catalog.jsx';
+import fetchCategories from '../fetcher/categories.jsx';
 
 function Catalog () {
-
-    const catalogItems = categories.categories;
+    const catalogItems = categories.categories.sort((a, b) => b.weight - a.weight);
     const catalogSection = catalogItems.map(catalogItem =>
         <Link key={catalogItem.id} to='/shop' state={{ catalogItem: catalogItem }}>
             <div className='catalog-item'>

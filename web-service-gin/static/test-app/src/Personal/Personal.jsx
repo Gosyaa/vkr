@@ -4,11 +4,35 @@ import { CartContext } from "../context/CartContext";
 import '../Login/Login.css';
 import './Personal.css';
 import { useEffect } from "react";
-import items from "../data/items";
+import items from "../data/items"
+import url from '../data/consts';
 
 export function Personal() {
-    const { user, editUser } = useContext(AuthContext);
+    const { user, token, editUser } = useContext(AuthContext);
     const { insertElement }  = useContext(CartContext);
+
+    const [orders, setOrders] = useState([])
+    useEffect(() => {
+        const fetchItems = async () => {
+          try {
+            let fetchURL = url + `/userOrders?accessToken=${token}`;
+            const response = await fetch(fetchURL);
+            if (!response.ok) {
+              throw new Error(`Error: ${response.status}`);
+            }
+            let data = await response.json();
+            if (data === null) {
+                data = [];
+            }
+            setOrders(data);
+          } catch (error) {
+            console.error('Error fetching orders:', error);
+          }
+        };
+    
+        fetchItems();
+      }, [token]);
+
 
     const [firstName, setFirstName]           = useState(user.firstName);
     const [lastName, setLastName]             = useState(user.lastName);
@@ -59,8 +83,7 @@ export function Personal() {
             lastName:   lastName,
             fatherName: fatherName, 
             phone:      phone,
-            email:      email,
-            orders:     user.orders
+            email:      email
         });
         setPassword('');
         setPasswordRepeat('');
@@ -156,7 +179,7 @@ export function Personal() {
                 </form>
         </div>
 
-    const userOrders = user.orders.map((item) =>
+    const userOrders = orders.map((item) =>
         <div className="personal-order" key={item.id}>
             <div className="order-left-section">
                 <img className="order-cover" src={item.image}/>
@@ -174,7 +197,7 @@ export function Personal() {
 
     return(
         <div className="personal-container">
-            <h2 className="personal-title">Добро пожаловать, {username}</h2>
+            <h2 className="personal-title">Добро пожаловать, {firstName}</h2>
             {userInfoForm}
             <h2 className="personal-title">История заказов</h2>
             <div className="personal-orders">

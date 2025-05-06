@@ -18,6 +18,19 @@ type ItemsForm struct {
 	Items []ItemsQuery `form:"items" binding:"required,dive"`
 }
 
+type Order struct {
+	OrderID    int64       `json:"id"`
+	Status     string      `json:"status"`
+	Items      []OrderItem `json:"items"`
+	PriceTotal int         `json:"priceTotal"`
+	Image      string      `json:"image"`
+}
+
+type OrderItem struct {
+	ItemID   int64 `json:"itemId"`
+	Quantity int64 `json:"quantity"`
+}
+
 func UserOrders(c *gin.Context) {
 	userToken := c.Query("accessToken")
 
@@ -31,10 +44,35 @@ func UserOrders(c *gin.Context) {
 		return
 	}
 
-	orders, err := order.GetUserOrders(userID)
+	ordersRaw, err := order.GetUserOrders(userID)
 	if err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
 		return
+	}
+
+	var orders []Order
+	for _, orderRaw := range ordersRaw {
+		var orderItems []OrderItem
+		image := ""
+		for _, orderItemRaw := range orderRaw.Items {
+			if image == "" {
+				item, err := shop.GetItem(orderItemRaw.ItemID)
+				if err == nil {
+					image = item.Image
+				}
+			}
+			orderItems = append(orderItems, OrderItem{
+				ItemID:   orderItemRaw.ItemID,
+				Quantity: orderItemRaw.Quantity,
+			})
+		}
+		orders = append(orders, Order{
+			OrderID:    orderRaw.OrderId,
+			Status:     orderRaw.Status,
+			Items:      orderItems,
+			PriceTotal: orderRaw.PriceTotal,
+			Image:      image,
+		})
 	}
 
 	c.JSON(200, orders)

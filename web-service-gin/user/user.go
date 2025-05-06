@@ -13,12 +13,12 @@ import (
 type User struct {
 	Id         int64  `json:"id"`
 	Login      string `json:"login"`
-	FirstName  string `json:"first_name"`
-	LastName   string `json:"last_name"`
-	FatherName string `json:"father_name"`
+	FirstName  string `json:"firstName"`
+	LastName   string `json:"lastName"`
+	FatherName string `json:"fatherName"`
 	Phone      string `json:"phone"`
 	Email      string `json:"email"`
-	IsAdmin    bool   `json:"is_admin"`
+	IsAdmin    bool   `json:"isAdmin"`
 }
 
 func CheckToken(token string) (int64, error) {

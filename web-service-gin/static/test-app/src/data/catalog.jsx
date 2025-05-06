@@ -5,17 +5,25 @@ import wrap           from './wrapCover.jpg';
 import rollZipper     from './rollZipperCover.jpg';
 import tractorZipper  from './tractorZipperCover.jpg';
 import sevices        from './servicesCover.jpg';
+import url            from './consts'
 
+async function getCategories() {
+    const fetchURL = url + '/categories'
+    try {
+        const response = await fetch(fetchURL);
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+        const json = await response.json();
+        console.log(json);
+        return json;
+    } catch (error) {
+        console.error(error.message);
+        return [];
+  }
+}
 
-export const categories = [
-    {id: 2, title: "Тентовые ткани",      image: fabrics},
-    {id: 1, title: "Продукция фирмы dot", image: imageStub},
-    {id: 3, title: "Тесьма отделочная",   image: braid},
-    {id: 4, title: "Плёнка ПВХ",          image: wrap},
-    {id: 5, title: "Разъёмные молнии",    image: rollZipper},
-    {id: 6, title: "Рулонные молнии",     image: tractorZipper},
-    {id: 7, title: "Услгуи",              image: sevices}
-]
+export const categories = await getCategories()
 
 export default {
     categories

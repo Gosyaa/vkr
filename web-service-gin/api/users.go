@@ -34,8 +34,8 @@ func CreateUser(c *gin.Context) {
 }
 
 func CheckUser(c *gin.Context) {
-	login := c.Query("login")
-	password := c.Query("password")
+	login := c.PostForm("login")
+	password := c.PostForm("password")
 
 	token, err := user.HandleLogin(login, password)
 	if err != nil {
