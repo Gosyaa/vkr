@@ -101,6 +101,59 @@ func HandleRegister(
 	return HandleLogin(login, password)
 }
 
+func HandleUpdate(
+	token string,
+	login string,
+	password string,
+	firstName string,
+	lastName string,
+	fatherName string,
+	phone string,
+	email string) error {
+	userID, err := CheckToken(token)
+	if err != nil {
+		return err
+	}
+	user, err := repository.GetUserById(userID)
+	if err != nil {
+		return err
+	}
+
+	passwordHash, err := generateHash(password)
+	if err != nil {
+		return err
+	}
+
+	if login != "" {
+		user.Login = login
+	}
+	if password != "" {
+		user.PasswordHash = passwordHash
+	}
+	if firstName != "" {
+		user.FirstName = firstName
+	}
+	if lastName != "" {
+		user.LastName = lastName
+	}
+	if fatherName != "" {
+		user.FatherName = fatherName
+	}
+	if phone != "" {
+		user.Phone = phone
+	}
+	if email != "" {
+		user.Email = email
+	}
+
+	err = repository.UpdateUser(user)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func GetUser(userID int64) (User, error) {
 	userRaw, err := repository.GetUserById(userID)
 	if err != nil {

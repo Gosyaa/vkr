@@ -78,18 +78,87 @@ export const AuthProvider = ({ children }) => {
 
     };
 
+    const register = async (newUser) => {
+        try {
+            const fetchURL = url + '/createUser'
+
+            const formData = new URLSearchParams();
+            formData.append("login", newUser.login);
+            formData.append("password", newUser.password);
+            formData.append("first_name", newUser.firstName)
+            formData.append("last_name", newUser.lastName)
+            formData.append("father_name", newUser.fatherName)
+            formData.append("phone", newUser.phone)
+            formData.append("email", newUser.email)
+
+            const response = await fetch(fetchURL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: formData.toString(),
+            })
+            if (!response.ok) {
+                throw new Error("Update Error");
+            }
+            if (response.status == 400) {
+                return 400
+            }
+            let tokenResult = await response.json();
+            if (!tokenResult) {
+                return 500;
+            }
+
+            setToken(tokenResult.token)
+            const userData = await getUser(token) 
+            setUser(userData)
+
+            return 200
+        } catch (error) {
+            console.error("Login Error", error);
+            return 500;
+        }
+    }
+
     const logout = () => {
         setToken(null);
         setUser(null);
     };
 
-    const editUser = (newUser) => {
-        console.log(user);
-        setUser(newUser);
+    const editUser =  async(newUser) => {
+        const fetchURL = url + `/updateUser?token=${token}`
+
+        const formData = new URLSearchParams();
+        formData.append("login", newUser.login);
+        formData.append("password", newUser.password);
+        formData.append("first_name", newUser.firstName)
+        formData.append("last_name", newUser.lastName)
+        formData.append("father_name", newUser.fatherName)
+        formData.append("phone", newUser.phone)
+        formData.append("email", newUser.email)
+
+        try {
+            const response = await fetch(fetchURL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: formData.toString(),
+            })
+            if (!response.ok) {
+                throw new Error("Update Error");
+            }
+            const userData = await getUser(token)
+            setUser(userData)
+            return true
+        } catch (error) {
+            console.error("Login Error", error);
+            return false
+        }
     }
 
     return (
-        <AuthContext.Provider value={{ user, token, login, logout, editUser }}>
+        <AuthContext.Provider value={{ user, token, login, logout, editUser, register }}>
             {children}
         </AuthContext.Provider>
     );

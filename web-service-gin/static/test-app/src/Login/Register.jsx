@@ -1,6 +1,11 @@
-import { useState } from "react";
+import { AuthContext } from "../context/AuthContext";
+import { useState, useContext } from "react";
+import { useNavigate } from 'react-router-dom';
 
 function Register() {
+    const { register } = useContext(AuthContext);
+    const navigate = useNavigate();   
+
     const [firstName, setFirstName]           = useState('');
     const [lastName, setLastName]             = useState('');
     const [fatherName, setFatherName]         = useState('');
@@ -10,9 +15,44 @@ function Register() {
     const [password, setPassword]             = useState('');
     const [passwordRepeat, setPasswordRepeat] = useState('');
 
-    const handleRegister = (e) => {
+    const handlePasswordUpdate = () => {
+        if (!password || password !== passwordRepeat) {
+            return false;
+        }
+        return true;
+    }
+
+    const handleRegister = async (e) => {
         e.preventDefault();
-        console.log(password === passwordRepeat);
+        if (password || passwordRepeat) {
+            const isSuccess = handlePasswordUpdate();
+            if (!isSuccess) {
+                setPassword('')
+                setPasswordRepeat('')
+                alert("Пароли не совпадают")
+            }
+
+            const code = await register({
+                login:      username,
+                password:   password,
+                firstName:  firstName,
+                lastName:   lastName,
+                fatherName: fatherName, 
+                phone:      phone,
+                email:      email
+            });
+            if (code === 500) {
+                alert('Не удалось зарегестрировать пользователя ');
+            }
+            else if (code === 400) {
+                alert('Логин занят!');
+                setUsername("")
+                window.scrollTo(0, 0);
+            }
+            else {
+                navigate('/');
+            }
+        }
     };
 
     return (
@@ -26,6 +66,7 @@ function Register() {
                             type="text" 
                             value={firstName} 
                             onChange={(e) => setFirstName(e.target.value)}  
+                            required
                         />
                     </div>
                     <div className="login-form-element">
@@ -34,6 +75,7 @@ function Register() {
                             type="text" 
                             value={lastName} 
                             onChange={(e) => setLastName(e.target.value)}  
+                            required
                         />
                     </div>
                     <div className="login-form-element">

@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 import { useState, useContext, useEffect } from 'react';
 import url from '../data/consts'
 import './Shop.css'
-import fetchItems from '../fetcher/items';
 
 export function Shop() {
     window.scroll(0, 0);
