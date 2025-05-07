@@ -68,8 +68,6 @@ export const CartProvider = ({ children }) => {
     };
 
     const editQuantity = (productId, quantity) => {
-        console.log(cart);
-        console.log(productId, quantity);
         setCart((prevCart) => 
             prevCart.map((product) =>
                 product.id === productId 

@@ -7,7 +7,7 @@ import "./Cart.css";
 import imageStub from '../data/dot.png';
 
 export function Cart() {
-    const { user, editUser } = useContext(AuthContext);
+    const { user, editUser, token } = useContext(AuthContext);
     const navigate = useNavigate();
     useEffect(() => {
         if (user === null) {
@@ -47,19 +47,26 @@ export function Cart() {
         return total;
     }
 
-    const handleOrder = () => {
-        const cartItems = cart.map((item) => ({itemId: item.product.id, quantity: item.quantity}));
-        const order = {
-            id: Math.floor(Math.random() * 100000),
-            status: "Создан",
-            items: cartItems, 
-            priceTotal: getPriceTotal(),
-            image: imageStub
+    const handleOrder = async () => {
+        const cartItems = cart.map((item) => ({id: item.product.id, quantity: item.quantity}));
+        fetchURL = url + `/createOrder?accessToken=${token}`
+        const formData = new URLSearchParams();
+        formData.append("items", JSON.stringify(cartItems))
+        try {
+            const response = await fetch(fetchURL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: formData.toString(),
+            })
+            if (!response.ok) {
+                throw new Error("Update Error");
+            } 
+            clearCart();
+        } catch (error) {
+            alert("Не удалось оформить заказ")
         }
-        let newUser = user;
-        newUser.orders.push(order);
-        editUser(newUser);
-        clearCart();
     }
 
     useEffect(() => {
