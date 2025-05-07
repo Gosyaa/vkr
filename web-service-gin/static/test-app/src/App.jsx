@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext.jsx';
 import { CartProvider } from './context/CartContext.jsx';
-import { PageCatalog, PagePayment, PageDelivey, PageOffers, PageSupport, PageAbout, PageLogin, PageRegister, PagePersonal, PageCart, PageItem } from './Pages';
+import { PageCatalog, PagePayment, PageDelivey, PageOffers, PageSupport, PageAbout, PageLogin, PageRegister, PagePersonal, PageCart, PageItem, PageAdmin } from './Pages';
 import { Shop } from './Shop/Shop.jsx';
 import MainPage from './MainPages';
 
@@ -27,6 +27,7 @@ function App() {
               <Route path="shop"     element={<Shop         />} />
               <Route path="cart"     element={<PageCart     />} />
               <Route path="item"     element={<PageItem     />} />
+              <Route path="admin"    element={<PageAdmin    />} />
             </Route>
         </Routes>
         </BrowserRouter>

@@ -5,6 +5,7 @@ import logo from './logo.png';
 import { menuItems } from '../data/menuItems';
 import GuestButtons from './GuestButtons';
 import UserButtons from './UserButtons';
+import AdminButtons from './AdminButtons'
 import { useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import './Header.css'
@@ -20,8 +21,12 @@ function Header() {
 
     const { user } = useContext(AuthContext);
     useEffect(() => {
+        console.log(user)
         setLoginSection(<GuestButtons/>);
-        if (user) {
+        if (user && user.isAdmin) {
+            setLoginSection(<AdminButtons/>);
+        }
+        else if (user) {
             setLoginSection(<UserButtons/>);
         }
     }, [user]);
