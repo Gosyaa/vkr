@@ -60,3 +60,24 @@ func InsertNewUser(userData UserRaw) error {
 
 	return nil
 }
+
+func UpdateUser(userData UserRaw) error {
+	initDB()
+
+	_, err := connection.Exec(`UPDATE users SET
+			login 		  = $1,
+			password_hash = $2,
+			first_name    = $3,
+			last_name     = $4,
+			father_name   = $5,
+			phone 		  = $6,
+			email 		  = $7 
+		WHERE id = $8`,
+		userData.Login, userData.PasswordHash, userData.FirstName, userData.LastName, userData.FatherName, userData.Phone, userData.Email, userData.Id)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

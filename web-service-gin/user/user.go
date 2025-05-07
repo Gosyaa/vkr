@@ -13,12 +13,12 @@ import (
 type User struct {
 	Id         int64  `json:"id"`
 	Login      string `json:"login"`
-	FirstName  string `json:"first_name"`
-	LastName   string `json:"last_name"`
-	FatherName string `json:"father_name"`
+	FirstName  string `json:"firstName"`
+	LastName   string `json:"lastName"`
+	FatherName string `json:"fatherName"`
 	Phone      string `json:"phone"`
 	Email      string `json:"email"`
-	IsAdmin    bool   `json:"is_admin"`
+	IsAdmin    bool   `json:"isAdmin"`
 }
 
 func CheckToken(token string) (int64, error) {
@@ -99,6 +99,59 @@ func HandleRegister(
 	}
 
 	return HandleLogin(login, password)
+}
+
+func HandleUpdate(
+	token string,
+	login string,
+	password string,
+	firstName string,
+	lastName string,
+	fatherName string,
+	phone string,
+	email string) error {
+	userID, err := CheckToken(token)
+	if err != nil {
+		return err
+	}
+	user, err := repository.GetUserById(userID)
+	if err != nil {
+		return err
+	}
+
+	passwordHash, err := generateHash(password)
+	if err != nil {
+		return err
+	}
+
+	if login != "" {
+		user.Login = login
+	}
+	if password != "" {
+		user.PasswordHash = passwordHash
+	}
+	if firstName != "" {
+		user.FirstName = firstName
+	}
+	if lastName != "" {
+		user.LastName = lastName
+	}
+	if fatherName != "" {
+		user.FatherName = fatherName
+	}
+	if phone != "" {
+		user.Phone = phone
+	}
+	if email != "" {
+		user.Email = email
+	}
+
+	err = repository.UpdateUser(user)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func GetUser(userID int64) (User, error) {

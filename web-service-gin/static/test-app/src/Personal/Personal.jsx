@@ -4,34 +4,59 @@ import { CartContext } from "../context/CartContext";
 import '../Login/Login.css';
 import './Personal.css';
 import { useEffect } from "react";
-import items from "../data/items";
+import items from "../data/items"
+import url from '../data/consts';
 
 export function Personal() {
-    const { user, editUser } = useContext(AuthContext);
+    const { user, token, editUser } = useContext(AuthContext);
     const { insertElement }  = useContext(CartContext);
 
-    const [firstName, setFirstName]           = useState(user.firstName);
-    const [lastName, setLastName]             = useState(user.lastName);
-    const [fatherName, setFatherName]         = useState(user.fatherName);
-    const [login, setLogin]                   = useState(user.login);
-    const [phone, setPhone]                   = useState(user.phone);
-    const [email, setEmail]                   = useState(user.email);
+    const [orders, setOrders] = useState([])
+    useEffect(() => {
+        const fetchItems = async () => {
+          try {
+            let fetchURL = url + `/userOrders?accessToken=${token}`;
+            const response = await fetch(fetchURL);
+            if (!response.ok) {
+              throw new Error(`Error: ${response.status}`);
+            }
+            let data = await response.json();
+            if (data === null) {
+                data = [];
+            }
+            setOrders(data);
+          } catch (error) {
+            console.error('Error fetching orders:', error);
+          }
+        };
+    
+        fetchItems();
+      }, [token]);
+
+
+    const [firstName, setFirstName]           = useState(user ? user.firstName : "");
+    const [lastName, setLastName]             = useState(user ? user.lastName : "");
+    const [fatherName, setFatherName]         = useState(user ? user.fatherName : "");
+    const [login, setLogin]                   = useState(user ? user.login : "");
+    const [phone, setPhone]                   = useState(user ? user.phone : "");
+    const [email, setEmail]                   = useState(user ? user.email : "");
     const [password, setPassword]             = useState('');
     const [passwordRepeat, setPasswordRepeat] = useState('');
 
-    const [username, setUsername] = useState(user.firstName ? user.firstName : user.login);
+    const [username, setUsername] = useState(user ? (user.firstName ? user.firstName : user.login) : "");
 
     useEffect(() => {
-        setUsername(user.firstName ? user.firstName : user.login);
+        resetUserInfo();
+        setUsername(user ? (user.firstName ? user.firstName : user.login) : "");
     }, [user]);
 
     const resetUserInfo = () => {
-        setFirstName(user.firstName);
-        setLastName(user.lastName);
-        setFatherName(user.fatherName);
-        setLogin(user.login);
-        setPhone(user.phone);
-        setEmail(user.email);
+        setFirstName(user ? user.firstName : "");
+        setLastName(user ? user.lastName : "");
+        setFatherName(user ? user.fatherName : "");
+        setLogin(user ? user.login : "");
+        setPhone(user ? user.phone : "");
+        setEmail(user ? user.email : "");
         setPassword('');
         setPasswordRepeat('');
     }
@@ -43,28 +68,36 @@ export function Personal() {
         return true;
     }
 
-    const handleUserUpdate = (e) => {
-        console.log(firstName);
+    const handleUserUpdate = async (e) => {
         e.preventDefault();
         if (password || passwordRepeat) {
             const isSuccess = handlePasswordUpdate();
             if (!isSuccess) {
                 resetUserInfo();
                 alert('Пароли не совпадают');
+                setPassword('');
+                setPasswordRepeat('');
+                window.scrollTo(0, 0);
+                return;
             }
         }
-        editUser({
+        window.scrollTo(0, 0);
+        isSuccess = await editUser({
             login:      login,
+            password:   password,
             firstName:  firstName,
             lastName:   lastName,
             fatherName: fatherName, 
             phone:      phone,
-            email:      email,
-            orders:     user.orders
+            email:      email
         });
+        if (!isSuccess) {
+            resetUserInfo();
+            alert('Не удалось обновить');
+        }
+        resetUserInfo();
         setPassword('');
         setPasswordRepeat('');
-        window.scrollTo(0, 0);
     }
 
     const repeatOrder = (repeatItems) => {
@@ -156,7 +189,7 @@ export function Personal() {
                 </form>
         </div>
 
-    const userOrders = user.orders.map((item) =>
+    const userOrders = orders.map((item) =>
         <div className="personal-order" key={item.id}>
             <div className="order-left-section">
                 <img className="order-cover" src={item.image}/>
@@ -172,14 +205,20 @@ export function Personal() {
         </div>
     );
 
+    let ordersField = ""
+    if (orders.length > 0) {
+        ordersField = <>
+            <h2 className="personal-title">История заказов</h2>
+                <div className="personal-orders">
+                    {userOrders}
+                </div></>
+    }
+
     return(
         <div className="personal-container">
-            <h2 className="personal-title">Добро пожаловать, {username}</h2>
+            <h2 className="personal-title">Добро пожаловать, {user ? user.firstName : ""}</h2>
             {userInfoForm}
-            <h2 className="personal-title">История заказов</h2>
-            <div className="personal-orders">
-                {userOrders}
-            </div>
+            {ordersField}
         </div>
     );
 }

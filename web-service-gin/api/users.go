@@ -7,13 +7,13 @@ import (
 )
 
 func CreateUser(c *gin.Context) {
-	login := c.Query("login")
-	password := c.Query("password")
-	firstName := c.Query("first_name")
-	lastName := c.Query("last_name")
-	fatherName := c.Query("father_name")
-	phone := c.Query("phone")
-	email := c.Query("email")
+	login := c.PostForm("login")
+	password := c.PostForm("password")
+	firstName := c.PostForm("first_name")
+	lastName := c.PostForm("last_name")
+	fatherName := c.PostForm("father_name")
+	phone := c.PostForm("phone")
+	email := c.PostForm("email")
 
 	if login == "" || password == "" {
 		c.JSON(400, gin.H{"error": "empty params"})
@@ -34,8 +34,8 @@ func CreateUser(c *gin.Context) {
 }
 
 func CheckUser(c *gin.Context) {
-	login := c.Query("login")
-	password := c.Query("password")
+	login := c.PostForm("login")
+	password := c.PostForm("password")
 
 	token, err := user.HandleLogin(login, password)
 	if err != nil {
@@ -69,4 +69,27 @@ func UserByToken(c *gin.Context) {
 	}
 
 	c.JSON(200, userData)
+}
+
+func UpdateUser(c *gin.Context) {
+	token := c.Query("token")
+	login := c.PostForm("login")
+	password := c.PostForm("password")
+	firstName := c.PostForm("first_name")
+	lastName := c.PostForm("last_name")
+	fatherName := c.PostForm("father_name")
+	phone := c.PostForm("phone")
+	email := c.PostForm("email")
+
+	err := user.HandleUpdate(token, login, password, firstName, lastName, fatherName, phone, email)
+	if err != nil {
+		if err.Error() == "token expired" || err.Error() == "incorrect token" {
+			c.JSON(401, gin.H{"error": err.Error()})
+		} else {
+			c.JSON(500, gin.H{"error": err.Error()})
+		}
+		return
+	}
+
+	c.JSON(200, gin.H{"status": "updated"})
 }

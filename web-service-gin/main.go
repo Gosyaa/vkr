@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	_ "github.com/jackc/pgx/v4/stdlib"
 	"github.com/jmoiron/sqlx"
@@ -54,6 +55,13 @@ func main() {
 	initDB()
 
 	router := gin.Default()
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:5173"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type"},
+		AllowCredentials: true,
+	}))
+
 	router.Static("/uploads", uploadDir)
 	router.GET("/albums", getAlbums)
 	router.GET("/test", getTest)
@@ -63,6 +71,7 @@ func main() {
 	router.POST("/checkUser", api.CheckUser)
 	router.POST("/createUser", api.CreateUser)
 	router.GET("/userByToken", api.UserByToken)
+	router.POST("/updateUser", api.UpdateUser)
 	router.GET("/userOrders", api.UserOrders)
 	router.POST("/createOrder", api.CreateOrder)
 

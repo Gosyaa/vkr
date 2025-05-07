@@ -3,8 +3,8 @@ import { CartContext } from '../context/CartContext';
 import { AuthContext } from '../context/AuthContext';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { useState, useContext } from 'react';
-import { items } from '../data/items';
+import { useState, useContext, useEffect } from 'react';
+import url from '../data/consts'
 import './Shop.css'
 
 export function Shop() {
@@ -15,7 +15,29 @@ export function Shop() {
 
     const navigate = useNavigate();
 
-    const itemsToDisplay = items.filter(item => item.categoryId === categoryId);
+    const [itemsToDisplay, setItemsToDisplay] = useState([]);
+
+    useEffect(() => {
+        const fetchItems = async () => {
+          try {
+            let fetchURL = url + `/items?categoryId=${categoryId}`;
+            const response = await fetch(fetchURL);
+            if (!response.ok) {
+              throw new Error(`Ошибка: ${response.status}`);
+            }
+            let data = await response.json();
+            if (data === null) {
+                data = [];
+            }
+            setItemsToDisplay(data);
+            setQuantities(data.map(() => 1));
+          } catch (error) {
+            console.error('Ошибка при получении данных:', error);
+          }
+        };
+    
+        fetchItems();
+      }, [categoryId]);
 
     const {insertElement} = useContext(CartContext);
     const {user}          = useContext(AuthContext);
@@ -23,6 +45,9 @@ export function Shop() {
     const [quantities, setQuantities] = useState(
         itemsToDisplay.map(() => 1)
     );
+
+    console.log(itemsToDisplay);
+    console.log(quantities);
 
     const updateQuantity = (index, value) => {
         value = Math.max(1, value);

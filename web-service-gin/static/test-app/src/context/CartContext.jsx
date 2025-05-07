@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect, useContext } from "react";
 import { AuthContext } from "./AuthContext";
+import url from '../data/consts'
 
 export const CartContext = createContext();
 
@@ -11,7 +12,23 @@ export const CartProvider = ({ children }) => {
         return savedCart ? JSON.parse(savedCart) : [];
     });
 
-    const insertElement = (product, quantity) => {
+    const insertElement = async (product, quantity) => {
+        try {
+            const productId = product.id
+            const fetchURL = url + `/item?itemId=${productId}`
+            const response = await fetch(fetchURL);
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}`);
+            }
+            let data = await response.json();
+            if (data != null) {
+                product = data
+            }
+        } catch (error) {
+            console.error('Error fetching item:', error);
+        }
+
+
         const productIndex = cart.findIndex(element => element.product.id === product.id);
         if (productIndex !== -1) {
             setCart((prevCart) => {
@@ -51,8 +68,6 @@ export const CartProvider = ({ children }) => {
     };
 
     const editQuantity = (productId, quantity) => {
-        console.log(cart);
-        console.log(productId, quantity);
         setCart((prevCart) => 
             prevCart.map((product) =>
                 product.id === productId 

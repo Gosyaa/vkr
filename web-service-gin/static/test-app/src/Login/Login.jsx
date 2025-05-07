@@ -9,12 +9,12 @@ function Login() {
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
         let isSuccess = false;
 
         if (username) {
-            isSuccess = login(username, password);
+            isSuccess = await login(username, password);
         }
 
         setUsername('');
