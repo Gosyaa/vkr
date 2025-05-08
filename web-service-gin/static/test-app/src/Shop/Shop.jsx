@@ -72,19 +72,27 @@ export function Shop() {
                 <Link key={item.id} to="/item" state={{ item: item }}>
                     <img  className='shop-item-image' src={item.image}/>
                 </Link>
-                <div className='title-container'>
-                    <Link key={item.id} to="/item" state={{ item: item }}>
-                        <span className='shop-item-title'>{item.title}</span>
-                    </Link>
-                </div>
-                <span className='shop-item-price'>{item.price}&#8381;</span>
-                <div  className='shop-item-buy-section'>
-                    <div className='shop-item-quantity-section'>
-                        <button className='quantity-button' onClick={() => updateQuantity(index, quantities[index] - 1)}>-</button>
-                        <input  className='quantity-field'  type='number' value={quantities[index]} onChange={(e) => updateQuantity(index, Number(e.target.value))}/>
-                        <button className='quantity-button' onClick={() => updateQuantity(index, quantities[index] + 1)}>+</button>
+                <div className='item-data-container'>
+                    <div className='upper-item-data'>
+                        <div className='title-container'>
+                            <Link key={item.id} to="/item" state={{ item: item }}>
+                                <div className='shop-item-title-container'>
+                                    <span className='shop-item-title'>{item.title}</span>
+                                </div>
+                            </Link>
+                        </div>
+                        <span className='shop-item-price'>{item.price}&#8381;</span>
                     </div>
-                    <button className='add-item-button' onClick={() => handleAddToCart(index)}>Купить</button>
+                    <div className='lower-item-data'>
+                        <div  className='shop-item-buy-section'>
+                            <div className='shop-item-quantity-section'>
+                                <button className='quantity-button' onClick={() => updateQuantity(index, quantities[index] - 1)}>-</button>
+                                <input  className='quantity-field'  type='number' value={quantities[index]} onChange={(e) => updateQuantity(index, Number(e.target.value))}/>
+                                <button className='quantity-button' onClick={() => updateQuantity(index, quantities[index] + 1)}>+</button>
+                            </div>
+                            <button className='add-item-button' onClick={() => handleAddToCart(index)}>Купить</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

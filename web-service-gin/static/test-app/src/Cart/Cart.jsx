@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { CartContext } from '../context/CartContext';
 import "./Cart.css";
+import url from '../data/consts';
 import imageStub from '../data/dot.png';
 
 export function Cart() {
@@ -49,7 +50,7 @@ export function Cart() {
 
     const handleOrder = async () => {
         const cartItems = cart.map((item) => ({id: item.product.id, quantity: item.quantity}));
-        fetchURL = url + `/createOrder?accessToken=${token}`
+        const fetchURL = url + `/createOrder?accessToken=${token}`
         const formData = new URLSearchParams();
         formData.append("items", JSON.stringify(cartItems))
         try {
