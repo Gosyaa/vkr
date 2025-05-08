@@ -18,3 +18,25 @@ func GetPropertiesByItemId(itemId int64) ([]ItemPropertyRaw, error) {
 	}
 	return properties, nil
 }
+
+func InsertProperty(itemId int64, property ItemPropertyRaw) error {
+	initDB()
+
+	_, err := connection.Exec(`INSERT INTO item_properties ("itemId", "propertyName", "propertyValue") VALUES ($1, $2, $3)`, itemId, property.PropertyName, property.PropertyValue)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func ClearPropeties(itemId int64) error {
+	initDB()
+
+	_, err := connection.Exec(`DELETE FROM item_properties WHERE "itemId" = $1`, itemId)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

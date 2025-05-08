@@ -153,3 +153,125 @@ func HandleOrder(itemID int64, count int64) error {
 
 	return nil
 }
+
+func InsertItem(item Item) error {
+	itemRaw := repository.ItemRaw{
+		CategoryId:  item.CategoryId,
+		Title:       item.Title,
+		Description: item.Description,
+		Image:       item.Image,
+		Price:       item.Price,
+		Available:   item.Available,
+	}
+
+	itemID, err := repository.InsertItem(itemRaw)
+	if err != nil {
+		return err
+	}
+
+	err = insertProperties(itemID, item.Properties)
+	if err != nil {
+		return err
+	}
+
+	err = insertExtraImages(itemID, item.ExtraImages)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func UpsertItem(item Item) error {
+	itemRaw := repository.ItemRaw{
+		CategoryId:  item.CategoryId,
+		Title:       item.Title,
+		Description: item.Description,
+		Image:       item.Image,
+		Price:       item.Price,
+		Available:   item.Available,
+	}
+	itemID := item.Id
+
+	err := repository.UpdateItem(itemID, itemRaw)
+	if err != nil {
+		return err
+	}
+
+	err = repository.ClearPropeties(itemID)
+	if err != nil {
+		return err
+	}
+
+	err = insertProperties(itemID, item.Properties)
+	if err != nil {
+		return err
+	}
+
+	err = repository.ClearExtraImages(itemID)
+	if err != nil {
+		return err
+	}
+
+	err = insertExtraImages(itemID, item.ExtraImages)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func InsertCategory(category Category) error {
+	categoryRaw := repository.CategoryRaw{
+		Title:  category.Title,
+		Image:  category.Image,
+		Weight: category.Weight,
+	}
+
+	err := repository.InsertCategory(categoryRaw)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func UpsertCategory(category Category) error {
+	categoryRaw := repository.CategoryRaw{
+		Id:     category.ID,
+		Title:  category.Title,
+		Image:  category.Image,
+		Weight: category.Weight,
+	}
+
+	err := repository.UpdateCategory(categoryRaw)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func insertProperties(itemID int64, properties []ItemProperty) error {
+	for _, property := range properties {
+		propertyRaw := repository.ItemPropertyRaw{
+			PropertyName:  property.PropertyName,
+			PropertyValue: property.PropertyValue,
+		}
+		err := repository.InsertProperty(itemID, propertyRaw)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func insertExtraImages(itemID int64, images []string) error {
+	for _, image := range images {
+		err := repository.InsertExtraImage(itemID, image)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
