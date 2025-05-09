@@ -8,4 +8,12 @@ go run .
 npm run dev
 ```
 В директории static
+
+ИЛИ
+
+```cmd
+docker-compose up --build
+```
+В web-service-gin (Корень проекта)
+
 ### Work in Progress
