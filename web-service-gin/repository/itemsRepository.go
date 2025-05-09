@@ -15,6 +15,17 @@ type ItemRaw struct {
 	Available   int64  `json:"available" db:"available"`
 }
 
+func GetAllItems() ([]ItemRaw, error) {
+	initDB()
+
+	var items []ItemRaw
+	err := connection.Select(&items, `SELECT * FROM items`)
+	if err != nil {
+		return items, err
+	}
+	return items, nil
+}
+
 func GetItemsByCategoryId(categoryId int64) ([]ItemRaw, error) {
 	initDB()
 

@@ -77,6 +77,7 @@ func main() {
 	router.POST("/updateUser", api.UpdateUser)
 	router.GET("/userOrders", api.UserOrders)
 	router.POST("/createOrder", api.CreateOrder)
+	router.GET("/adminItems", api.AdminItems)
 	router.POST("/createItem", api.CreateItem)
 	router.POST("/upsertItem", api.UpsertItem)
 	router.POST("/createCategory", api.Categories)

@@ -69,6 +69,19 @@ func constructItem(itemRaw repository.ItemRaw, itemPropertiesRaw []repository.It
 	}
 }
 
+type AdminItem struct {
+	Id           int64          `json:"id"`
+	CategoryId   int64          `json:"categoryId"`
+	CategoryName string         `json:"categoryName"`
+	Title        string         `json:"title"`
+	Description  string         `json:"description"`
+	Image        string         `json:"image"`
+	Price        int64          `json:"price"`
+	Available    int64          `json:"available"`
+	Properties   []ItemProperty `json:"properties"`
+	ExtraImages  []string       `json:"extraImages"`
+}
+
 func GetCategories() ([]Category, error) {
 	var categories []Category
 	categoriesRaw, err := repository.GetCategories()
@@ -102,6 +115,55 @@ func GetItems(categoryID int64) ([]Item, error) {
 
 		items = append(items, constructItem(itemsRaw[i], properties, extraImages))
 	}
+	return items, nil
+}
+
+func GetItemsForAdmin() ([]AdminItem, error) {
+	var items []AdminItem
+
+	categories, err := GetCategories()
+	if err != nil {
+		return items, err
+	}
+
+	itemsRaw, err := repository.GetAllItems()
+	if err != nil {
+		return items, err
+	}
+
+	for i := 0; i < len(itemsRaw); i++ {
+		properties, err := repository.GetPropertiesByItemId(itemsRaw[i].Id)
+		if err != nil {
+			continue
+		}
+		extraImages, err := repository.GetExtraImagesByItemId(itemsRaw[i].Id)
+		if err != nil {
+			continue
+		}
+
+		item := constructItem(itemsRaw[i], properties, extraImages)
+		var categoryName string
+		for _, category := range categories {
+			if category.ID == item.CategoryId {
+				categoryName = category.Title
+				break
+			}
+		}
+
+		items = append(items, AdminItem{
+			Id:           item.Id,
+			CategoryId:   item.CategoryId,
+			CategoryName: categoryName,
+			Title:        item.Title,
+			Description:  item.Description,
+			Image:        item.Image,
+			Price:        item.Price,
+			Available:    item.Available,
+			Properties:   item.Properties,
+			ExtraImages:  item.ExtraImages,
+		})
+	}
+
 	return items, nil
 }
 

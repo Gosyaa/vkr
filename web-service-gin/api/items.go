@@ -43,6 +43,31 @@ func Item(c *gin.Context) {
 	c.JSON(200, item)
 }
 
+func AdminItems(c *gin.Context) {
+	userToken := c.Query("accessToken")
+	isAdmin, err := user.CheckAdmin(userToken)
+	if err != nil {
+		if err.Error() == "token expired" || err.Error() == "incorrect token" {
+			c.JSON(401, gin.H{"error": err.Error()})
+		} else {
+			c.JSON(500, gin.H{"error": err.Error()})
+		}
+		return
+	}
+	if !isAdmin {
+		c.JSON(401, gin.H{"error": "not an admin"})
+		return
+	}
+
+	items, err := shop.GetItemsForAdmin()
+	if err != nil {
+		c.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(200, items)
+}
+
 func CreateItem(c *gin.Context) {
 	userToken := c.Query("accessToken")
 	isAdmin, err := user.CheckAdmin(userToken)
