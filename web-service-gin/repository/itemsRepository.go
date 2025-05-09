@@ -15,6 +15,17 @@ type ItemRaw struct {
 	Available   int64  `json:"available" db:"available"`
 }
 
+func GetAllItems() ([]ItemRaw, error) {
+	initDB()
+
+	var items []ItemRaw
+	err := connection.Select(&items, `SELECT * FROM items`)
+	if err != nil {
+		return items, err
+	}
+	return items, nil
+}
+
 func GetItemsByCategoryId(categoryId int64) ([]ItemRaw, error) {
 	initDB()
 
@@ -41,13 +52,29 @@ func GetItemById(itemId int64) (ItemRaw, error) {
 	return items[0], nil
 }
 
-func InsertItem(item ItemRaw) error {
+func InsertItem(item ItemRaw) (int64, error) {
 	initDB()
 
-	_, err := connection.Exec(`INSERT INTO items 
-		(id, "categoryId", title, description, image, price, available)
-		VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-		item.Id, item.CategoryId, item.Title, item.Description, item.Image, item.Price, item.Available)
+	var insertedID int64
+	err := connection.QueryRow(`
+		INSERT INTO items 
+			("categoryId", title, description, image, price, available)
+		VALUES ($1, $2, $3, $4, $5, $6)
+		RETURNING id`,
+		item.CategoryId, item.Title, item.Description, item.Image, item.Price, item.Available,
+	).Scan(&insertedID)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return insertedID, nil
+}
+
+func UpdateItemQuantity(itemID int64, available int64) error {
+	initDB()
+
+	_, err := connection.Exec(`UPDATE items SET available = $1 WHERE id = $2`, available, itemID)
 	if err != nil {
 		return err
 	}
@@ -55,10 +82,17 @@ func InsertItem(item ItemRaw) error {
 	return nil
 }
 
-func UpdateItemQuantity(itemID int64, available int64) error {
+func UpdateItem(itemID int64, item ItemRaw) error {
 	initDB()
 
-	_, err := connection.Exec(`UPDATE items SET available = $1 WHERE id = $2`, available, itemID)
+	_, err := connection.Exec(`UPDATE items SET
+		"categoryId" = $1,
+		title        = $2,
+		description  = $3,
+		image        = $4,
+		price        = $5,
+		available    = $6
+	WHERE id = $7`, item.CategoryId, item.Title, item.Description, item.Image, item.Price, item.Available, itemID)
 	if err != nil {
 		return err
 	}

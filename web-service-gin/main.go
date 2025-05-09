@@ -4,9 +4,11 @@ import (
 	"example/web-service-gin/api"
 	"net/http"
 	"os"
+	"path/filepath"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	_ "github.com/jackc/pgx/v4/stdlib"
 	"github.com/jmoiron/sqlx"
 )
@@ -57,12 +59,13 @@ func main() {
 	router := gin.Default()
 	router.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"http://localhost:5173"},
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowMethods:     []string{"GET", "POST"},
 		AllowHeaders:     []string{"Origin", "Content-Type"},
 		AllowCredentials: true,
 	}))
 
 	router.Static("/uploads", uploadDir)
+	router.POST("/upload", uploadFile)
 	router.GET("/albums", getAlbums)
 	router.GET("/test", getTest)
 	router.GET("/categories", api.Categories)
@@ -74,6 +77,11 @@ func main() {
 	router.POST("/updateUser", api.UpdateUser)
 	router.GET("/userOrders", api.UserOrders)
 	router.POST("/createOrder", api.CreateOrder)
+	router.GET("/adminItems", api.AdminItems)
+	router.POST("/createItem", api.CreateItem)
+	router.POST("/upsertItem", api.UpsertItem)
+	router.POST("/createCategory", api.Categories)
+	router.POST("/upsertCategory", api.UpsertCategory)
 
 	router.Run("localhost:8080")
 }
@@ -107,4 +115,31 @@ func GetFileURL(name string) string {
 	}
 
 	return baseURL + name
+}
+
+func uploadFile(c *gin.Context) {
+	file, err := c.FormFile("file")
+	if err != nil {
+		c.JSON(400, gin.H{"error": "File not found"})
+		return
+	}
+
+	ext := filepath.Ext(file.Filename)
+	if ext == "" {
+		c.JSON(400, gin.H{"error": "No extension in the file"})
+		return
+	}
+
+	newFileName := uuid.New().String() + ext
+	dst := filepath.Join(uploadDir, newFileName)
+
+	err = c.SaveUploadedFile(file, dst)
+	if err != nil {
+		c.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"file": newFileName,
+	})
 }

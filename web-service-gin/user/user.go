@@ -39,6 +39,25 @@ func CheckToken(token string) (int64, error) {
 	return userID, nil
 }
 
+func CheckAdmin(token string) (bool, error) {
+	tokenData, err := repository.GetTokenInfo(token)
+	if err != nil && err.Error() == "not found" {
+		return false, errors.New("incorrect token")
+	}
+	if err != nil {
+		return false, err
+	}
+	if time.Now().After(tokenData.ExpireDate) {
+		return false, errors.New("token expired")
+	}
+
+	user, err := GetUser(tokenData.UserId)
+	if err != nil {
+		return false, errors.New("incorrect token")
+	}
+	return user.IsAdmin, nil
+}
+
 func HandleLogin(login string, password string) (string, error) {
 	user, err := repository.GetUserByLogin(login)
 	if err != nil {

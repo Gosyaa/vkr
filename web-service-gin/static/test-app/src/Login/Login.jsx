@@ -17,10 +17,12 @@ function Login() {
             isSuccess = await login(username, password);
         }
 
-        setUsername('');
         setPassword('');
         if (isSuccess) {
             navigate('/');
+        }
+        else {
+            alert("Не верный логин или пароль!");
         }
     };
 

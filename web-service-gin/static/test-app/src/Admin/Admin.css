@@ -1,0 +1,73 @@
+.admin-items-container {
+    font-family: Arial, sans-serif;
+    padding: 0 10vw;
+    margin-bottom: 5vh;
+    margin-top: 3vh;
+  }
+  
+  .admin-items-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .admin-items-table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .admin-items-table th,
+  .admin-items-table td {
+    text-align: center;
+    padding: 12px 8px;
+    border: 1px solid #ddd;
+  }
+  
+  .admin-items-table th {
+    background-color: #f0f0f0;
+    color: #222;
+    font-weight: bold;
+  }
+  
+  .admin-items-table tr:nth-child(even) {
+    background-color: #fafafa;
+  }
+  
+  .admin-items-table tr:hover {
+    background-color: #f1f7ff;
+  }
+  
+  .edit-button {
+    padding: 6px 12px;
+    background-color: #1976d2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .edit-button:hover {
+    background-color: #1565c0;
+  }
+  
+  .admin-items-header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+  }
+  
+  .create-button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .create-button:hover {
+    background-color: #43a047;
+  }

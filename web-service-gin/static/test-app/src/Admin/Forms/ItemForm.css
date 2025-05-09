@@ -1,0 +1,112 @@
+.item-form-container {
+    padding: 2rem;
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .item-form-container h2 {
+    margin-bottom: 20px;
+  }
+  
+  .item-form-container form > div {
+    margin-bottom: 15px;
+  }
+  
+  .item-form-container label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .item-form-container input[type="text"],
+  .item-form-container input[type="number"],
+  .item-form-container select,
+  .item-form-container textarea {
+    width: 100%;
+    padding: 8px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  .item-form-container textarea {
+    resize: vertical;
+    min-height: 80px;
+    max-height: 300px;
+  }
+  
+.form-button {
+    padding: 8px 14px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  
+.form-button:hover {
+    background-color: #0056b3;
+  }
+
+  .form-delete-button {
+    padding: 8px 14px;
+    background-color: #ff0000;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  
+.form-delete-button:hover {
+    background-color: #b30000;
+  }
+  
+  .item-form-container img {
+    max-width: 200px;
+    display: block;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .save-button {
+    background-color: #28a745;
+    color: white;
+    font-size: 18px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: block;
+    margin: 30px auto 0 auto;
+    transition: background-color 0.3s ease;
+  }
+  
+  .save-button:hover {
+    background-color: #218838;
+  }
+  
+  .back-admin-button {
+    background-color: #6c757d;
+    color: white;
+    font-size: 14px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: background-color 0.2s ease;
+  }
+  
+  .back-admin-button:hover {
+    background-color: #5a6268;
+  }

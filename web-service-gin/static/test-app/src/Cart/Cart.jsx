@@ -8,7 +8,7 @@ import url from '../data/consts';
 import imageStub from '../data/dot.png';
 
 export function Cart() {
-    const { user, editUser, token } = useContext(AuthContext);
+    const { user, token } = useContext(AuthContext);
     const navigate = useNavigate();
     useEffect(() => {
         if (user === null) {

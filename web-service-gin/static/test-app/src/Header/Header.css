@@ -35,13 +35,27 @@ hr {
     /* Анимация для наведения */
 }
 
+.admin-item {
+    font-family: Arial, sans-serif;
+    font-size: 1.5rem;
+    color: #8c4646;
+    text-decoration: none;
+    padding: 10px 20px;
+    margin: 0 10px;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+.admin-item:hover {
+    background: #8c4646;
+    color: white;
+    transform: scale(1.05);
+}
+
 .top-bar-item:hover, .account-item:hover, .logout-button:hover {
     background: #465f8c;
-    /* Теплый песочный фон при наведении */
     color: white;
-    /* Более насыщенный коричневый текст */
     transform: scale(1.05);
-    /* Небольшое увеличение */
 }
 
 .whatsapp-icon {
