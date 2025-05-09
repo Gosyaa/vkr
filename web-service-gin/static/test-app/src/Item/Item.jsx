@@ -7,6 +7,12 @@ import './Item.css';
 export function Item() {
     const location = useLocation();
     const item = location.state.item;
+    if (item.extraImages === null) {
+        item.extraImages = [];
+    }
+    if (item.properties === null) {
+        item.properties = [];
+    }
 
     const { insertElement } = useContext(CartContext);
 
